@@ -1,4 +1,8 @@
 from math import *
+from random import random as rand
+from random import randint
+from random import normalvariate as randn
+
 
 class PowerdEvalator:
     def __init__(self, eq):
@@ -16,6 +20,7 @@ class PowerdEvalator:
             "exp", "log", "sqrt", "sin", "cos", "tan", "log10", "log2",
             "expm1", "log1p", "atan", "asin", "acos", "acosh", "asinh",
             "atanh", "cosh", "sinh", "tanh", "erf", "erfc",
+            "rand", "randint", "randn",
         ]
         primary_operators = ["+", "-", "*", "/", "**", "//", "%"]
         parenthesis_operators = ["(", ")", "[", "]"]
@@ -84,6 +89,7 @@ class PowerdEvalator:
             "exp", "log", "sqrt", "sin", "cos", "tan", "log10", "log2",
             "expm1", "log1p", "atan", "asin", "acos", "acosh", "asinh",
             "atanh", "cosh", "sinh", "tanh", "erf", "erfc",
+            "rand", "randint", "randn",
         ]
         for opr in operators:
             if opr + "[" in partrial_eq:
@@ -93,7 +99,7 @@ class PowerdEvalator:
                         start = i + len(opr + "[")
                         break
                 counter = 1
-                for j in range(start+1, len(partrial_eq)):
+                for j in range(start, len(partrial_eq)):
                     if partrial_eq[j] == "[":
                         counter += 1
                     elif partrial_eq[j] == "]":
@@ -103,55 +109,61 @@ class PowerdEvalator:
                         break
                 
                 if opr == "exp":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(exp(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(exp(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "log":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(log(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(log(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "sqrt":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(sqrt(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(sqrt(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "sin":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(sin(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(sin(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "cos":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(cos(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(cos(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "log10":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(log10(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(log10(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "log2":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(log2(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(log2(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "tan":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(tan(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(tan(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "abs":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(fabs(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(fabs(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "pi":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(pi) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(pi) + ")" + partrial_eq[stop+1:]
                 elif opr == "e":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(e) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(e) + ")" + partrial_eq[stop+1:]
                 elif opr == "inf":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(inf) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(inf) + ")" + partrial_eq[stop+1:]
                 elif opr == "expm1":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(expm1(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(expm1(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "log1p":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(log1p(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(log1p(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "atan":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(atan(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(atan(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "asin":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(asin(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(asin(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "acos":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(acos(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(acos(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "acosh":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(acosh(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(acosh(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "asinh":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(asinh(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(asinh(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "atanh":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(atanh(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(atanh(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "cosh":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(cosh(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(cosh(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "sinh":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(sinh(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(sinh(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "tanh":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(tanh(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(tanh(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "erf":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(erf(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(erf(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
                 elif opr == "erfc":
-                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(erfc(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[j+1:]
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(erfc(self.evaluate(partrial_eq=partrial_eq[start:stop]))) + ")" + partrial_eq[stop+1:]
+                elif opr == "rand":
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + str(rand()) + partrial_eq[stop+1:]
+                elif opr == "randint":
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + str(randint(0, int(self.evaluate(partrial_eq=partrial_eq[start:stop])))) + partrial_eq[stop+1:]
+                elif opr == "randn":
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + str(randn(mu=0, sigma=1)) + partrial_eq[stop+1:]
 
 
         return eval(partrial_eq)
