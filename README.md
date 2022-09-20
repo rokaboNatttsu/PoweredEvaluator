@@ -107,6 +107,9 @@ arccosh, arcsinh, arctanh：acosh[x], asinh[x], atanh[x]
 
 erf, erfc：erf[x], erfc[x]
 
+aとbのうち、小さい値を返す：min[a,b]
+
+aとbのうち、大きい値を返す：max[a,b]
 
 
 ### 定数と無限大

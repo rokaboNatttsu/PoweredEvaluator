@@ -20,7 +20,7 @@ class PowerdEvalator:
             "exp", "log", "sqrt", "sin", "cos", "tan", "log10", "log2",
             "expm1", "log1p", "atan", "asin", "acos", "acosh", "asinh",
             "atanh", "cosh", "sinh", "tanh", "erf", "erfc",
-            "rand", "randint", "randn",
+            "rand", "randint", "randn", "min", "max",
         ]
         primary_operators = ["+", "-", "*", "/", "**", "//", "%"]
         parenthesis_operators = ["(", ")", "[", "]"]
@@ -78,6 +78,11 @@ class PowerdEvalator:
                 
         return self.eq
                 
+    def can_evaluate(self):
+        try:
+            return True
+        except:
+            return False
 
     def evaluate(self, partrial_eq=None):
         if partrial_eq is None:
@@ -89,7 +94,7 @@ class PowerdEvalator:
             "exp", "log", "sqrt", "sin", "cos", "tan", "log10", "log2",
             "expm1", "log1p", "atan", "asin", "acos", "acosh", "asinh",
             "atanh", "cosh", "sinh", "tanh", "erf", "erfc",
-            "rand", "randint", "randn",
+            "rand", "randint", "randn", "min", "max",
         ]
         for opr in operators:
             if opr + "[" in partrial_eq:
@@ -164,6 +169,12 @@ class PowerdEvalator:
                     partrial_eq = partrial_eq[:start-len(opr + "[")] + str(randint(0, int(self.evaluate(partrial_eq=partrial_eq[start:stop])))) + partrial_eq[stop+1:]
                 elif opr == "randn":
                     partrial_eq = partrial_eq[:start-len(opr + "[")] + str(randn(mu=0, sigma=1)) + partrial_eq[stop+1:]
+                elif opr == "min":
+                    a, b = partrial_eq[start:stop].split(",")
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(min(self.evaluate(a), self.evaluate(b))) + ")" + partrial_eq[stop+1:]
+                elif opr == "max":
+                    a, b = partrial_eq[start:stop].split(",")
+                    partrial_eq = partrial_eq[:start-len(opr + "[")] + "(" + str(max(self.evaluate(a), self.evaluate(b))) + ")" + partrial_eq[stop+1:]
 
 
         return eval(partrial_eq)
